@@ -1,0 +1,92 @@
+Coupling - How much work is involved in changing something.
+We should have less coupling, we want to make functional changes with as less code changes as possible.
+
+Tight Coupling - Tight Coupling means that two classes often change together. That means if there are two classes A and B, and A knows more than it should about how B was implemented then A and B are tightly coupled.
+
+eg :-
+class Subject {
+    Topic t = new Topic();
+    public void startReading()
+    {
+        t.understand();
+    }
+}
+class Topic {
+    public void understand()
+    {
+        System.out.println("Tight coupling concept");
+    }
+}
+
+explanation of eg - if Topic class understand() method change to gotit() method then you have to change the startReading() method will call gotit() method instead of calling understand() method.
+
+
+Loose Coupling : Loose coupling is a design principle in Java that emphasizes reducing the dependency between components or modules within a software system. In a loosely coupled system, components are designed to interact with each other with minimal knowledge of each other’s internal workings. This approach enhances flexibility, maintainability, and scalability, as changes in one component have minimal impact on others.
+
+Annotations - Annotations in Java are like special tags you put on your code to give it extra information or instructions. They help to simplify and automate things.
+
+
+Dependency Injection - Suppose a class in dependent on an object of another so you will manually create an object and will pass it to the class which requires an object. But if you use spring it will do that automatically for you.
+
+Eg :- 
+public class Engine {
+    public void start() {
+        System.out.println("Engine started");
+    }
+}
+
+public class Car {
+    private Engine engine;
+
+    // Constructor that takes an Engine as a parameter
+    public Car(Engine engine) {
+        this.engine = engine;
+    }
+
+    public void drive() {
+        engine.start();
+        System.out.println("Car is driving");
+    }
+}
+
+// Main method
+public class ManualApp {
+    public static void main(String[] args) {
+        Engine engine = new Engine(); // Create an Engine
+        Car car = new Car(engine);    // Inject the Engine into the Car
+        car.drive();
+    }
+}
+
+But with spring :- 
+
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public Engine engine() {
+        return new Engine(); // Spring creates the Engine
+    }
+
+    @Bean
+    public Car car() {
+        return new Car(engine()); // Spring injects the Engine into the Car
+    }
+}
+
+Wiring of Dependency - means connecting objects together so that one object can use another object. It's like plugging in the pieces of a puzzle where each piece needs to fit into another to complete the picture. Identifying beans , Identifying dependency and wiring them together.
+
+
+Spring Container is an object that manages spring beans and their lifecycle
+
+@Primary - This annotation is used to give preference to a bean which is autowired to a single valued dependency.
+
+Three Type of dependency injections - Constructor based, setter based, field based
+
+IOC - inversion of control, Spring takes the responsibility of object creation and managing the dependency therefore it is taking control from the user to explicitly create and manage beans.
+
+@component - IOC Container (Application and Bean Properties)
+
+**Even when a class is not needed some initializations happen which may increase startup time, but by using @Lazy annotations startup time could be reduced as all the classes are not initialised at the start time.
+
+**Same instance of a BEAN will be returned if you ask for  a BEAN (singleton) but if you want different beans to be returned you could use prototype @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
