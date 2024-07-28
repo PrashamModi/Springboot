@@ -90,3 +90,7 @@ IOC - inversion of control, Spring takes the responsibility of object creation a
 **Even when a class is not needed some initializations happen which may increase startup time, but by using @Lazy annotations startup time could be reduced as all the classes are not initialised at the start time.
 
 **Same instance of a BEAN will be returned if you ask for  a BEAN (singleton) but if you want different beans to be returned you could use prototype @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+
+A Spring singleton bean can be any normal class you write, but declaring it's scope as singleton means that Spring will only create one instance and provide its reference to all beans that reference the declared bean. You may have many instances of that class in your application, but only one will be created for that bean. You may even have multiple beans of the same class all declared as singleton. Each bean will create exactly one instance of the class.
+
+Why we do not use method inside the constructor instead of @PostConstruct - because when the constructor is called, the bean is not yet initialized - i.e. no dependencies are injected. In the @PostConstruct method the bean is fully initialized and you can use the dependencies.

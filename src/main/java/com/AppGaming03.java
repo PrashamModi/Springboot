@@ -1,24 +1,55 @@
 package com;
 
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+// import java.util.Arrays;
+
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-// import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-// @Component
-// @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-// class NormalClass {
-// }
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 
-// @Component
-// @Lazy
-// @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-// class ProtypeClass {
-// }
+class A {
+    A() {
+        // super();
+        System.out.println("A constructor");
+    }
+}
+
+@Component
+class SomeDependency {
+    SomeDependency(){
+        System.out.println("It was also called");
+    }
+    public void getReady(SomeDependency someDependency) {
+        System.out.println("Some Logic Of ready" + someDependency );
+    }
+}
+
+@Component
+class SomeClass extends A {
+    private SomeDependency someDependency;
+
+    public SomeClass(SomeDependency someDependency) {
+        super();
+        this.someDependency = someDependency;
+        System.out.println("All dependency are ready!!" + this.someDependency);
+    }
+
+    @PostConstruct
+    public void initialize() {
+        someDependency.getReady(someDependency);
+    }
+
+    @PreDestroy
+    public void cleanup() {
+        System.out.println("Destroy!!");
+    }
+}
+
+
 
 @Configuration
 @ComponentScan
@@ -26,16 +57,7 @@ public class AppGaming03 {
     public static void main(String args[]) {
         System.out.println("first");
         try (var context = new AnnotationConfigApplicationContext(AppGaming03.class)) {
-            
-            // context.getBean(GamingConsole.class).up();
-            // context.getBean(GameRunner.class).run();
-            // System.out.println("Main method loaded");
-            // context.getBean(B.class).doSomething();
-            // System.out.println(context.getBean(NormalClass.class));
-            // System.out.println(context.getBean(NormalClass.class));
-
-            // System.out.println(context.getBean(ProtypeClass.class));
-            // System.out.println(context.getBean(ProtypeClass.class));
+            // Arrays.stream(context.getBeanDefinitionNames());
         }
     }
 }
